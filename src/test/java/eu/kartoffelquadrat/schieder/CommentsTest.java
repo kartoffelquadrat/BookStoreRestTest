@@ -30,24 +30,48 @@ public class CommentsTest extends RestTestUtils {
      * Test adding a comment (is tested on a new book with random ISBN, to avoid state collisions on test re-run)
      */
     @Test
-    public void testIsbnsIsbnCommentsPost() throws UnirestException, InterruptedException {
+    public void testIsbnsIsbnCommentsPost() throws UnirestException {
 
-        // Add fake book to operate on (so this test can be repeated)
+        // Add fake book to operate on (so this test can be repeated) - extra method because unit tests do not allow return values.
+        addCommentToRandomBook();
+    }
+
+    /**
+     * Test reomving all comments of a book.
+     */
+    @Test
+    public void  testIsbnsIsbnCommentsDelete() throws UnirestException {
+
+        String isbn = addCommentToRandomBook();
+
+        // delete all comments and verify no more comments are stored
+        HttpResponse<String> deleteResponse = Unirest.delete(getServiceURL("/isbns/"+isbn+"/comments")).asString();
+        verifyOk(deleteResponse);
+
+        // Verify no more comments stored for book
+        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/"+isbn+"/comments")).asString();
+        verifyOk(comments);
+        assert(comments.getBody().equals("{}"));
+    }
+
+    /**
+     * Helper method to add a comment to a random new book. Returns ISBN of the book that has been generated.
+     *
+     * @return ISBN of the test book as String.
+     */
+    private String addCommentToRandomBook() throws UnirestException {
         String randomIsbn = getRandomIsbn();
         HttpResponse addBookAck = addTestBook(randomIsbn);
         verifyOk(addBookAck);
 
-        // Give the server enough time to actually add the book to the internal state
-        //Thread.sleep(1000);
-
         // Try to add comment
         String commentBody = "So much better than the movie";
-        HttpResponse<String> addComment = Unirest.post(getServiceURL("/isbns/"+randomIsbn+"/comments")).body(commentBody).asString();
+        HttpResponse<String> addComment = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments")).body(commentBody).asString();
         verifyOk(addComment);
 
         // Verify comments for new book.
-        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/"+randomIsbn+"/comments")).asString();
+        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
         assert comments.getBody().contains(commentBody);
+        return randomIsbn;
     }
-
 }

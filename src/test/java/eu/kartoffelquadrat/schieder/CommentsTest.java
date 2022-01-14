@@ -37,7 +37,7 @@ public class CommentsTest extends RestTestUtils {
     }
 
     /**
-     * Test reomving all comments of a book.
+     * Test removing all comments of a book.
      */
     @Test
     public void  testIsbnsIsbnCommentsDelete() throws UnirestException {

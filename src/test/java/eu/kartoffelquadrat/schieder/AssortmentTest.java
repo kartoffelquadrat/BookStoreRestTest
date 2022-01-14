@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+
 import java.lang.Math;
 import java.util.Random;
 
@@ -54,25 +55,12 @@ public class AssortmentTest
     public void testIsbnsIsbnPut() throws UnirestException {
 
         // Using a random ISBN to avoid clash on multiple test run.
-        String isbn = Integer.toString(Math.abs(new Random().nextInt()));
-        System.out.println(isbn);
-
-        // JSON body for the book to add.
-        String body = "{\n" +
-                "  \"isbn\": " + isbn + ",\n" +
-                "  \"title\": \"The Uninhabitable Earth\",\n" +
-                "  \"author\": \"David Wallace-Wells\",\n" +
-                "  \"priceInCents\": 2447,\n" +
-                "  \"bookAbstract\": \"It is worse, much worse, than you think. The slowness of climate change is a fairy tale, perhaps as pernicious as the one that says it isn’t happening at all, and comes to us bundled with several others in an anthology of comforting delusions: that global warming is an Arctic saga, unfolding remotely; that it is strictly a matter of sea level and coastlines, not an enveloping crisis sparing no place and leaving no life un-deformed.\"\n" +
-                "}";
-
-        // Try to add book to backend
-        HttpResponse<String> addBookReply = Unirest.put(getServiceURL("/isbns/" + isbn)).header("Content-Type", "application/json; charset=utf-8")
-                .body(body).asString();
+        String randomIsbn = getRandomIsbn();
+        HttpResponse<String> addBookReply = addTestBook(randomIsbn);
         verifyOk(addBookReply);
 
         // Verify catalogue content (must now contain the new book)
         String catalogue = Unirest.get(getServiceURL("/isbns")).asString().getBody();
-        assert catalogue.contains(isbn);
+        assert catalogue.contains(randomIsbn);
     }
 }

@@ -4,6 +4,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
+import java.lang.Math;
+import java.util.Random;
 
 /**
  * All Unit tests for Assortment Resources
@@ -21,11 +23,12 @@ public class AssortmentTest
         HttpResponse<String> catalogue = Unirest.get(getServiceURL("/isbns")).asString();
         verifyOk(catalogue);
 
-        // Verify catalogue content
-        assert catalogue.getBody().contains("9780739360385");
-        assert catalogue.getBody().contains("9780553382563");
-        assert catalogue.getBody().contains("9781977791122");
-        assert catalogue.getBody().contains("9780262538473");
+        // Verify and return catalogue content
+        String body = catalogue.getBody();
+        assert body.contains("9780739360385");
+        assert body.contains("9780553382563");
+        assert body.contains("9781977791122");
+        assert body.contains("9780262538473");
     }
 
     /**
@@ -44,14 +47,19 @@ public class AssortmentTest
     }
 
     /**
-     * Verify that PUT on /isbns/{isbn} returns 200 and allows adding a book to catalogue
+     * Verify that PUT on /isbns/{isbn} returns 200 and allows adding a book to catalogue. Also verifies the new isbn
+     * appears in list and subsequently removes it, to leave server is original state.
      */
     @Test
     public void testIsbnsIsbnPut() throws UnirestException {
 
+        // Using a random ISBN to avoid clash on multiple test run.
+        String isbn = Integer.toString(Math.abs(new Random().nextInt()));
+        System.out.println(isbn);
+
         // JSON body for the book to add.
         String body = "{\n" +
-                "  \"isbn\": 9780525576709,\n" +
+                "  \"isbn\": " + isbn + ",\n" +
                 "  \"title\": \"The Uninhabitable Earth\",\n" +
                 "  \"author\": \"David Wallace-Wells\",\n" +
                 "  \"priceInCents\": 2447,\n" +
@@ -59,10 +67,12 @@ public class AssortmentTest
                 "}";
 
         // Try to add book to backend
-        HttpResponse<String> addBookReply = Unirest.put(getServiceURL("/isbns/9780525576709")).header("Content-Type", "application/json; charset=utf-8")
+        HttpResponse<String> addBookReply = Unirest.put(getServiceURL("/isbns/" + isbn)).header("Content-Type", "application/json; charset=utf-8")
                 .body(body).asString();
         verifyOk(addBookReply);
 
-        // TODO: Verify catalogue content (must now contain new book)
+        // Verify catalogue content (must now contain the new book)
+        String catalogue = Unirest.get(getServiceURL("/isbns")).asString().getBody();
+        assert catalogue.contains(isbn);
     }
 }

@@ -71,16 +71,39 @@ public class CommentsTest extends RestTestUtils {
 
         // Modify comment
         String newComment = "NEWCOMMENT";
-        HttpResponse<String> addCommentReply = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments/"+commentId)).body(newComment).asString();
+        HttpResponse<String> addCommentReply = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments/" + commentId)).body(newComment).asString();
         verifyOk(addCommentReply);
 
         // Verify change
         // Try to retrieve comments for default book, verify comment
-        HttpResponse<String> updatedCommentReply = Unirest.get(getServiceURL("/isbns/"+randomIsbn+"/comments")).asString();
+        HttpResponse<String> updatedCommentReply = Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
         verifyOk(updatedCommentReply);
         assert updatedCommentReply.getBody().contains(newComment);
     }
 
+    /**
+     * Test removing a specific comment by ID. Creates a new random book first to avoid collisions on test re-execution.
+     */
+    @Test
+    public void testIsbnsIsbnCommentsCommentDelete() throws UnirestException {
+
+        // Add a new comment to a new random book
+        String randomIsbn = addCommentToRandomBook();
+
+        // Try to delete the comment
+        // Find comment ID
+        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
+        String commentId = comments.getBody().split(":")[0].substring(1).replace("\"", "");
+
+        // Actually try to delete it
+        HttpResponse<String> deleteCommentReply = Unirest.delete(getServiceURL("/isbns/" + randomIsbn + "/comments/"+commentId)).asString();
+        verifyOk(deleteCommentReply);
+
+        // Verify no more comments stored for book
+        HttpResponse<String> commentsAfterDeletion = Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
+        verifyOk(commentsAfterDeletion);
+        assert (commentsAfterDeletion.getBody().equals("{}"));
+    }
 
     /**
      * Helper method to add a comment to a random new book. Returns ISBN of the book that has been generated.

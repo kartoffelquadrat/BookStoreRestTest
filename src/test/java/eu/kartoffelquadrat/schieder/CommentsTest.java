@@ -40,19 +40,47 @@ public class CommentsTest extends RestTestUtils {
      * Test removing all comments of a book.
      */
     @Test
-    public void  testIsbnsIsbnCommentsDelete() throws UnirestException {
+    public void testIsbnsIsbnCommentsDelete() throws UnirestException {
 
         String isbn = addCommentToRandomBook();
 
         // delete all comments and verify no more comments are stored
-        HttpResponse<String> deleteResponse = Unirest.delete(getServiceURL("/isbns/"+isbn+"/comments")).asString();
+        HttpResponse<String> deleteResponse = Unirest.delete(getServiceURL("/isbns/" + isbn + "/comments")).asString();
         verifyOk(deleteResponse);
 
         // Verify no more comments stored for book
-        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/"+isbn+"/comments")).asString();
+        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/" + isbn + "/comments")).asString();
         verifyOk(comments);
-        assert(comments.getBody().equals("{}"));
+        assert (comments.getBody().equals("{}"));
     }
+
+    /**
+     * Test modifying an existing comment. First creates a new comment for a random book to avoid collisions on test
+     * re-execution.
+     */
+    @Test
+    public void testIsbnsIsbnCommentsCommentPost() throws UnirestException {
+
+        // Add a new comment to a new random book
+        String randomIsbn = addCommentToRandomBook();
+
+        // Try to modify the comment
+        // Find comment ID
+        HttpResponse<String> comments = Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
+        String commentId = comments.getBody().split(":")[0].substring(1).replace("\"", "");
+
+        // Modify comment
+        String newComment = "NEWCOMMENT";
+        HttpResponse<String> addCommentReply = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments/"+commentId)).body(newComment).asString();
+        verifyOk(addCommentReply);
+
+        // Verify change
+        // Try to retrieve comments for default book, verify comment
+        HttpResponse<String> updatedCommentReply = Unirest.get(getServiceURL("/isbns/"+randomIsbn+"/comments")).asString();
+        verifyOk(updatedCommentReply);
+        assert updatedCommentReply.getBody().contains(newComment);
+    }
+
 
     /**
      * Helper method to add a comment to a random new book. Returns ISBN of the book that has been generated.

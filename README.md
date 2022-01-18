@@ -19,6 +19,16 @@ RESTification success can be measured by comparing the actual API behaviour to t
 
 ![rate](markdown/rate.png)
 
+## MISC
+
+ * There is one dedicated (```@Test``` annotated) unit test per REST endpoint (resource + CRUD operation)
+ * All queries are realized with [UniRest](http://kong.github.io/unirest-java/)
+ * Server replies are verified for containment of the status code "200/OK" in the header.
+ * Queries modifying state (*Put* / *Post* / *Delete*)...
+   * Do not operate on default data but on random isbn identifiers to avoid collisions / blemished state on test re-run.
+   * Are followed by a subsequent *Get* request to verify the state change was correctly applied.
+ * Queries containing a body payload (*Put* / *Post*) specify the body encoding with a header field: ```Content-Type: application/json```.
+
 ## Contact / Pull Requests
 
  * Author: Maximilian Schiedermeier ![email](markdown/email.png)

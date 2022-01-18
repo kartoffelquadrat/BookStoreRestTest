@@ -3,6 +3,7 @@ package eu.kartoffelquadrat.schieder;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.junit.Test;
 
 /**
@@ -64,8 +65,31 @@ public class StockLocationsTest extends RestTestUtils {
         verifyOk(stockAmount);
 
         // Verify initial stock count for default book
-        assert(stockAmount.getBody().equals("4"));
+        assert (stockAmount.getBody().equals("4"));
     }
 
+    /**
+     * Modifies the stock amount for new random book and verifies changes took effect.
+     *
+     * @throws UnirestException
+     */
+    @Test
+    public void testStocklocationsStocklocationIsbnsPost() throws UnirestException {
 
+        // Prepare random book (so test repetition does not lead to collision)
+        String isbn = getRandomIsbn();
+        addTestBook(isbn);
+        String location = "Lyon";
+        String amount = "42";
+
+        // Try to retrieve comments for default book
+        RequestBodyEntity o = Unirest.post(getServiceURL("/stocklocations/" + location + "/" + isbn)).header("Content-Type", "application/json").body(amount);
+        HttpResponse<String> addStockReply = o.asString();
+        verifyOk(addStockReply);
+
+        // Verify resulting amount.
+        HttpResponse<String> stockAmount = Unirest.get(getServiceURL("/stocklocations/" + location + "/" + isbn)).asString();
+        verifyOk(stockAmount);
+        assert (stockAmount.getBody().equals(amount));
+    }
 }

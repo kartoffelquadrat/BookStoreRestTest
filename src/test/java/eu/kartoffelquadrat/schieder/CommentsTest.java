@@ -71,7 +71,7 @@ public class CommentsTest extends RestTestUtils {
 
         // Modify comment
         String newComment = "NEWCOMMENT";
-        HttpResponse<String> addCommentReply = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments/" + commentId)).body(newComment).asString();
+        HttpResponse<String> addCommentReply = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments/" + commentId)).header("Content-Type", "application/json").body(newComment).asString();
         verifyOk(addCommentReply);
 
         // Verify change
@@ -117,7 +117,7 @@ public class CommentsTest extends RestTestUtils {
 
         // Try to add comment
         String commentBody = "So much better than the movie";
-        HttpResponse<String> addComment = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments")).body(commentBody).asString();
+        HttpResponse<String> addComment = Unirest.post(getServiceURL("/isbns/" + randomIsbn + "/comments")).header("Content-Type", "application/json").body(commentBody).asString();
         verifyOk(addComment);
 
         // Verify comments for new book.

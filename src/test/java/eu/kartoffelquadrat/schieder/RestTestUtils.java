@@ -55,7 +55,7 @@ public class RestTestUtils {
                 "}";
 
         // Try to add book to backend
-        return Unirest.put(getServiceURL("/isbns/" + isbn)).header("Content-Type", "application/json; charset=utf-8")
+        return Unirest.put(getServiceURL("/isbns/" + isbn)).header("Content-Type", "application/json").header("Content-Type", "application/json; charset=utf-8")
                 .body(body).asString();
     }
 }

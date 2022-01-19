@@ -21,12 +21,12 @@ public class RestTestUtils {
     }
 
     /**
-     * Helper method to inspect HttpResponse and ensure return code is 200 (OK)
+     * Helper method to inspect HttpResponse and ensure return code is in 2XX range (OK / other success)
      * @param response as a previously received HttpResponse object
      */
     protected void verifyOk(HttpResponse<String> response) {
 
-        assert response.getStatus() == 200;
+        assert response.getStatus()/100 == 2;
     }
 
     /**

@@ -15,8 +15,9 @@ RESTification success can be measured by comparing the actual API behaviour to t
 
  * Clone this repo
  * Open it with IntelliJ
- * Run the tests, verify the success rate:
-
+ * Run the tests, verify the success rate
+   * Maven command: ```mvn clean test```
+   * IntelliJ test menu:  
 ![rate](markdown/rate.png)
 
 ## MISC

@@ -82,7 +82,7 @@ public class StockLocationsTest extends RestTestUtils {
         String location = "Lyon";
         String amount = "42";
 
-        // Try to retrieve comments for default book
+        // Try to add comment for random new book
         RequestBodyEntity o = Unirest.post(getServiceURL("/stocklocations/" + location + "/" + isbn)).header("Content-Type", "application/json").body(amount);
         HttpResponse<String> addStockReply = o.asString();
         verifyOk(addStockReply);

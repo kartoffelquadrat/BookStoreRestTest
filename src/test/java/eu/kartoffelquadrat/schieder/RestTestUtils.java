@@ -8,54 +8,61 @@ import java.util.Random;
 
 public class RestTestUtils {
 
-    private final String SERVICE_LOCATION = "http://127.0.0.1:8080/bookstore";
+  // Set this flag to true if every write operation should be followed by a read that verifies state change.
+  // Note: Setting this flag to true adds cross dependencies between individual tests and may blemish the outcome.
+  public static final boolean READ_VERIFICATIONS = false;
 
-    /**
-     * Helper method to construct service URI out of provided relative resource location.
-     *
-     * @param localResource as the relative service resource. Must start with leading slash.
-     * @return URI string for the provided local resource.
-     */
-    protected String getServiceURL(String localResource) {
-        return SERVICE_LOCATION + localResource;
-    }
+  private final String SERVICE_LOCATION = "http://127.0.0.1:8080/bookstore";
 
-    /**
-     * Helper method to inspect HttpResponse and ensure return code is in 2XX range (OK / other success)
-     * @param response as a previously received HttpResponse object
-     */
-    protected void verifyOk(HttpResponse<String> response) {
+  /**
+   * Helper method to construct service URI out of provided relative resource location.
+   *
+   * @param localResource as the relative service resource. Must start with leading slash.
+   * @return URI string for the provided local resource.
+   */
+  protected String getServiceURL(String localResource) {
+    return SERVICE_LOCATION + localResource;
+  }
 
-        assert response.getStatus()/100 == 2;
-    }
+  /**
+   * Helper method to inspect HttpResponse and ensure return code is in 2XX range (OK / other
+   * success)
+   *
+   * @param response as a previously received HttpResponse object
+   */
+  protected void verifyOk(HttpResponse<String> response) {
 
-    /**
-     * Helper method to create a random ISBN.
-     *
-     * @return new random isbn number (Stringified positive number)
-     */
-    protected String getRandomIsbn() {
-        return Integer.toString(Math.abs(new Random().nextInt()));
-    }
+    assert response.getStatus() / 100 == 2;
+  }
 
-    /**
-     * Helper method to add a test book with provided isbn
-     *
-     * @return HttpResponse representing the server reply.
-     */
-    protected HttpResponse<String> addTestBook(String isbn) throws UnirestException {
+  /**
+   * Helper method to create a random ISBN.
+   *
+   * @return new random isbn number (Stringified positive number)
+   */
+  protected String getRandomIsbn() {
+    return Integer.toString(Math.abs(new Random().nextInt()));
+  }
 
-        // JSON body for the book to add.
-        String body = "{\n" +
-                "  \"isbn\": " + isbn + ",\n" +
-                "  \"title\": \"The Uninhabitable Earth\",\n" +
-                "  \"author\": \"David Wallace-Wells\",\n" +
-                "  \"priceInCents\": 2447,\n" +
-                "  \"bookAbstract\": \"It is worse, much worse, than you think. The slowness of climate change is a fairy tale, perhaps as pernicious as the one that says it isn’t happening at all, and comes to us bundled with several others in an anthology of comforting delusions: that global warming is an Arctic saga, unfolding remotely; that it is strictly a matter of sea level and coastlines, not an enveloping crisis sparing no place and leaving no life un-deformed.\"\n" +
-                "}";
+  /**
+   * Helper method to add a test book with provided isbn
+   *
+   * @return HttpResponse representing the server reply.
+   */
+  protected HttpResponse<String> addTestBook(String isbn) throws UnirestException {
 
-        // Try to add book to backend
-        return Unirest.put(getServiceURL("/isbns/" + isbn)).header("Content-Type", "application/json; charset=utf-8")
-                .body(body).asString();
-    }
+    // JSON body for the book to add.
+    String body = "{\n" +
+        "  \"isbn\": " + isbn + ",\n" +
+        "  \"title\": \"The Uninhabitable Earth\",\n" +
+        "  \"author\": \"David Wallace-Wells\",\n" +
+        "  \"priceInCents\": 2447,\n" +
+        "  \"bookAbstract\": \"It is worse, much worse, than you think. The slowness of climate change is a fairy tale, perhaps as pernicious as the one that says it isn’t happening at all, and comes to us bundled with several others in an anthology of comforting delusions: that global warming is an Arctic saga, unfolding remotely; that it is strictly a matter of sea level and coastlines, not an enveloping crisis sparing no place and leaving no life un-deformed.\"\n" +
+        "}";
+
+    // Try to add book to backend
+    return Unirest.put(getServiceURL("/isbns/" + isbn))
+        .header("Content-Type", "application/json; charset=utf-8")
+        .body(body).asString();
+  }
 }

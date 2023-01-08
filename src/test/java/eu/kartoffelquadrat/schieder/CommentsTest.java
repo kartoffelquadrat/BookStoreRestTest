@@ -44,7 +44,7 @@ public class CommentsTest extends RestTestUtils {
     verifyOk(addComment);
 
     // If Read verification enabled: Verify comments for new book.
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       HttpResponse<String> comments =
           Unirest.get(getServiceURL("/isbns/" + isbn + "/comments")).asString();
       assert comments.getBody().contains(commentBody);
@@ -68,7 +68,7 @@ public class CommentsTest extends RestTestUtils {
 
 
     // If Read verification enabled: Verify no more comments stored for book
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       HttpResponse<String> comments =
           Unirest.get(getServiceURL("/isbns/" + isbn + "/comments")).asString();
       verifyOk(comments);
@@ -87,8 +87,6 @@ public class CommentsTest extends RestTestUtils {
   @Test
   public void testIsbnsIsbnCommentsCommentPost() throws UnirestException {
 
-    // TODO: Use a built in default book, with default comment ID (is comment ID variable??)
-    // Add a new comment to a new random book
 //    String randomIsbn = ;
     long randomIsbn = Long.parseLong("9780553382563");
 
@@ -107,7 +105,7 @@ public class CommentsTest extends RestTestUtils {
 
 
     // If Read verification enabled: Verify comment
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       HttpResponse<String> updatedCommentReply =
           Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
       verifyOk(updatedCommentReply);
@@ -139,7 +137,7 @@ public class CommentsTest extends RestTestUtils {
     verifyOk(deleteCommentReply);
 
 
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       // Verify no more comments stored for book
       HttpResponse<String> commentsAfterDeletion =
           Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();

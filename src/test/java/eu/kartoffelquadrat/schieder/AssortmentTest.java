@@ -60,7 +60,7 @@ public class AssortmentTest
     verifyOk(addBookReply);
 
     // If Read verification enabled: Verify catalogue content (must now contain the new book)
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       String catalogue = Unirest.get(getServiceURL("/isbns")).asString().getBody();
       assert catalogue.contains(randomIsbn);
     } else {

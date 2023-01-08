@@ -90,7 +90,7 @@ public class StockLocationsTest extends RestTestUtils {
 
 
     // If Read verification enabled: Verify stock content (must now contain updated amount)
-    if (RestTestUtils.READ_VERIFICATIONS) {
+    if (RestTestUtils.isReadVerficationsRequested()) {
       // Verify resulting amount.
       HttpResponse<String> stockAmount =
           Unirest.get(getServiceURL("/stocklocations/" + location + "/" + isbn)).asString();

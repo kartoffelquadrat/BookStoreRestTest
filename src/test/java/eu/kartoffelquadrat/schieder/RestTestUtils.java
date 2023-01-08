@@ -8,9 +8,16 @@ import java.util.Random;
 
 public class RestTestUtils {
 
-  // Set this flag to true if every write operation should be followed by a read that verifies state change.
-  // Note: Setting this flag to true adds cross dependencies between individual tests and may blemish the outcome.
-  public static final boolean READ_VERIFICATIONS = false;
+  /**
+   * Helper method to tell if CUD effectiveleness verification by subsequent R is requested in form
+   * of system propertied entry. Corresponding maven argument: -Dreadverif=true See:
+   * https://stackoverflow.com/a/9923049
+   */
+  public static boolean isReadVerficationsRequested() {
+    boolean readVerifRequested = Boolean.valueOf(System.getProperty("readverif"));
+    System.out.println("Read verification of corrupting operations enabled: " + readVerifRequested);
+    return readVerifRequested;
+  }
 
   private final String SERVICE_LOCATION = "http://127.0.0.1:8080/bookstore";
 

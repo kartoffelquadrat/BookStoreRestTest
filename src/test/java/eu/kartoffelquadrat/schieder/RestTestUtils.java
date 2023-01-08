@@ -9,8 +9,8 @@ import java.util.Random;
 public class RestTestUtils {
 
   /**
-   * Helper method to tell if CUD effectiveleness verification by subsequent R is requested in form
-   * of system propertied entry. Corresponding maven argument: -Dreadverif=true See:
+   * Helper method to tell if CUD was effective by verification by subsequent R is requested in form
+   * of system properties entry. Corresponding maven argument: -Dreadverif=true See:
    * https://stackoverflow.com/a/9923049
    */
   public static boolean isReadVerficationsRequested() {

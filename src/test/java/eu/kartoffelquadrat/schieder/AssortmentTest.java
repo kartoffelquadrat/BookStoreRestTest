@@ -6,7 +6,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 
 /**
- * All Unit tests for Assortment Resources
+ * All Unit tests for Assortment Resources.
+ * @author Maximilian Schiedermeier
  */
 public class AssortmentTest
     extends RestTestUtils {

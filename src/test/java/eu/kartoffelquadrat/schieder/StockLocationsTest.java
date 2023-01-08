@@ -7,7 +7,8 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.junit.Test;
 
 /**
- * All Unit tests for StockLocation Resources
+ * All Unit tests for StockLocation Resources.
+ * @author Maximilian Schiedermeier
  */
 public class StockLocationsTest extends RestTestUtils {
 

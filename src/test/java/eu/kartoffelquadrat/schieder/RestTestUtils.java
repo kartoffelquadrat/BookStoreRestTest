@@ -6,6 +6,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.Random;
 
+/**
+ * Generic util functions used by various test scenarios.
+ * @author Maximilian Schiedermeier
+ */
 public class RestTestUtils {
 
   /**

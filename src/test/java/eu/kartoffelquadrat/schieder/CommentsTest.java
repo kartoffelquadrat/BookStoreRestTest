@@ -6,7 +6,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 
 /**
- * All Unit tests for Comments Resources
+ * All Unit tests for Comments Resources.
+ * @author Maximilian Schiedermeier
  */
 public class CommentsTest extends RestTestUtils {
 

@@ -1,4 +1,4 @@
-package eu.kartoffelquadrat.schieder;
+package eu.kartoffelquadrat.bsresttest;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;

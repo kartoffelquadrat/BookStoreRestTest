@@ -7,6 +7,7 @@ import org.junit.Test;
 
 /**
  * All Unit tests for Assortment Resources.
+ *
  * @author Maximilian Schiedermeier
  */
 public class AssortmentTest

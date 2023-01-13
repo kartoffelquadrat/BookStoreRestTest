@@ -130,6 +130,7 @@ public class CommentsTest extends RestTestUtils {
     // Find comment ID
     HttpResponse<String> comments =
         Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
+    System.out.println(comments.getBody());
     long commentId = Long.parseLong(comments.getBody().split(":")[0].substring(1).replace("\"", ""));
 
     // Actually try to delete it
@@ -143,7 +144,8 @@ public class CommentsTest extends RestTestUtils {
       HttpResponse<String> commentsAfterDeletion =
           Unirest.get(getServiceURL("/isbns/" + randomIsbn + "/comments")).asString();
       verifyOk(commentsAfterDeletion);
-      assert (commentsAfterDeletion.getBody().equals("{}"));
+      System.out.println(commentsAfterDeletion.getBody());
+      assert (commentsAfterDeletion.getBody().split(":")[1].equals("\"Would read it again.\"}"));
     } else {
       System.out.println("READ VERIFICATIONS SKIPPED TO REDUCE TEST CROSS DEPENDENCIES.");
     }

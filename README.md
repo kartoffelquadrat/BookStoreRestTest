@@ -56,6 +56,10 @@ using [a reference implementation BookStore backend](https://github.com/m5c/Book
      Delete calls) and without.
 * Verify that all tests pass.
 
+## License
+
+This software is under open source [MIT License](LICENSE.txt).
+
 ## Contact / Pull Requests
 
 * Author: Maximilian Schiedermeier ![email](markdown/email.png)
